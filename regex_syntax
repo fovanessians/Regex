@@ -1,0 +1,213 @@
+import re
+
+# will find a match in abcdef, since the lookbehind will back up 3 characters and check if the contained pattern matches.
+m = re.search('(?<=abc)def', 'abcdef')
+m.group(0)
+#'def'
+
+#This example looks for a word following a hyphen:
+
+m = re.search('(?<=-)\w+', 'spam-egg')
+m.group(0)
+'egg'
+
+#Will try to match with yes-pattern if the group with given id or name exists, and with no-pattern if it doesn’t.
+q = re.search('(?(id/name)yes-pattern|no-pattern)')
+
+
+'''The special sequences consist of '\' and a character from the list below. If the ordinary character is not on the list, then the resulting RE will match the second character. For example, \$ matches the character '$'.
+
+\number
+Matches the contents of the group of the same number. Groups are numbered starting from 1. For example, (.+) \1 matches 'the the' or '55 55', but not 'thethe' (note the space after the group). This special sequence can only be used to match one of the first 99 groups. If the first digit of number is 0, or number is 3 octal digits long, it will not be interpreted as a group match, but as the character with octal value number. Inside the '[' and ']' of a character class, all numeric escapes are treated as characters.
+
+\A
+Matches only at the start of the string.
+
+\b
+Matches the empty string, but only at the beginning or end of a word. A word is defined as a sequence of alphanumeric or underscore characters, so the end of a word is indicated by whitespace or a non-alphanumeric, non-underscore character. Note that formally, \b is defined as the boundary between a \w and a \W character (or vice versa), or between \w and the beginning/end of the string, so the precise set of characters deemed to be alphanumeric depends on the values of the UNICODE and LOCALE flags. For example, r'\bfoo\b' matches 'foo', 'foo.', '(foo)', 'bar foo baz' but not 'foobar' or 'foo3'. Inside a character range, \b represents the backspace character, for compatibility with Python’s string literals.
+
+\B
+Matches the empty string, but only when it is not at the beginning or end of a word. This means that r'py\B' matches 'python', 'py3', 'py2', but not 'py', 'py.', or 'py!'. \B is just the opposite of \b, so is also subject to the settings of LOCALE and UNICODE.
+
+\d
+When the UNICODE flag is not specified, matches any decimal digit; this is equivalent to the set [0-9]. With UNICODE, it will match whatever is classified as a decimal digit in the Unicode character properties database.
+
+\D
+When the UNICODE flag is not specified, matches any non-digit character; this is equivalent to the set [^0-9]. With UNICODE, it will match anything other than character marked as digits in the Unicode character properties database.
+
+\s
+When the UNICODE flag is not specified, it matches any whitespace character, this is equivalent to the set [ \t\n\r\f\v]. The LOCALE flag has no extra effect on matching of the space. If UNICODE is set, this will match the characters [ \t\n\r\f\v] plus whatever is classified as space in the Unicode character properties database.
+
+\S
+When the UNICODE flag is not specified, matches any non-whitespace character; this is equivalent to the set [^ \t\n\r\f\v] The LOCALE flag has no extra effect on non-whitespace match. If UNICODE is set, then any character not marked as space in the Unicode character properties database is matched.
+
+\w
+When the LOCALE and UNICODE flags are not specified, matches any alphanumeric character and the underscore; this is equivalent to the set [a-zA-Z0-9_]. With LOCALE, it will match the set [0-9_] plus whatever characters are defined as alphanumeric for the current locale. If UNICODE is set, this will match the characters [0-9_] plus whatever is classified as alphanumeric in the Unicode character properties database.
+
+\W
+When the LOCALE and UNICODE flags are not specified, matches any non-alphanumeric character; this is equivalent to the set [^a-zA-Z0-9_]. With LOCALE, it will match any character not in the set [0-9_], and not defined as alphanumeric for the current locale. If UNICODE is set, this will match anything other than [0-9_] plus characters classified as not alphanumeric in the Unicode character properties database.
+
+\Z
+Matches only at the end of the string.'''
+
+
+prog = re.compile(pattern)
+result = prog.match(string)
+is equivalent to
+
+result = re.match(pattern, string)
+#but using re.compile() and saving the resulting regular expression object for reuse is more efficient when the expression will be used several times 
+#in a single program.
+
+a = re.compile(r"""\d +  # the integral part
+                   \.    # the decimal point
+                   \d *  # some fractional digits""", re.X)
+b = re.compile(r"\d+\.\d*")
+
+'''>>> re.split('\W+', 'Words, words, words.')
+['Words', 'words', 'words', '']
+>>> re.split('(\W+)', 'Words, words, words.')
+['Words', ', ', 'words', ', ', 'words', '.', '']
+>>> re.split('\W+', 'Words, words, words.', 1)
+['Words', 'words, words.']
+>>> re.split('[a-f]+', '0a3B9', flags=re.IGNORECASE)
+['0', '3', '9']'''
+
+
+re.split('x*', 'foo')
+#['foo']
+
+>>> pattern = re.compile("o")
+>>> pattern.match("dog")      # No match as "o" is not at the start of "dog".
+>>> pattern.match("dog", 1)   # Match as "o" is the 2nd character of "dog".
+<_sre.SRE_Match object at ...>
+
+
+match = re.search(pattern, string)
+if match:
+    process(match)
+    
+    
+  >>> m = re.match(r"(\w+) (\w+)", "Isaac Newton, physicist")
+>>> m.group(0)       # The entire match
+'Isaac Newton'
+>>> m.group(1)       # The first parenthesized subgroup.
+'Isaac'
+>>> m.group(2)       # The second parenthesized subgroup.
+'Newton'
+>>> m.group(1, 2)    # Multiple arguments give us a tuple.
+('Isaac', 'Newton')
+
+
+>>> m = re.match(r"(?P<first_name>\w+) (?P<last_name>\w+)", "Malcolm Reynolds")
+>>> m.group('first_name')
+'Malcolm'
+>>> m.group('last_name')
+'Reynolds'
+
+>>> m.group(1)
+'Malcolm'
+>>> m.group(2)
+'Reynolds'
+
+>>> m = re.match(r"(..)+", "a1b2c3")  # Matches 3 times.
+>>> m.group(1)                        # Returns only the last match.
+'c3'
+
+>>> m = re.match(r"(\d+)\.(\d+)", "24.1632")
+>>> m.groups()
+('24', '1632')
+
+
+
+>>> m = re.match(r"(?P<first_name>\w+) (?P<last_name>\w+)", "Malcolm Reynolds")
+>>> m.groupdict()
+{'first_name': 'Malcolm', 'last_name': 'Reynolds'}
+
+
+>>> email = "tony@tiremove_thisger.net"
+>>> m = re.search("remove_this", email)
+>>> email[:m.start()] + email[m.end():]
+'tony@tiger.net'
+
+>>> text = "He was carefully disguised but captured quickly by police."
+>>> re.findall(r"\w+ly", text)
+['carefully', 'quickly']
+
+
+
+___________________________________________________________________________________________________________________________________________--
+# Test under the Python Command-Line Interpreter
+$ python3
+......
+>>> import re   # Need module 're' for regular expression
+
+# Try find: re.findall(regexStr, inStr) -> matchedSubstringsList
+# r'...' denotes raw strings which ignore escape code, i.e., r'\n' is '\'+'n'
+>>> re.findall(r'[0-9]+', 'abc123xyz')
+['123']   # Return a list of matched substrings
+>>> re.findall(r'[0-9]+', 'abcxyz')
+[]
+>>> re.findall(r'[0-9]+', 'abc00123xyz456_0')
+['00123', '456', '0']
+>>> re.findall(r'\d+', 'abc00123xyz456_0')
+['00123', '456', '0']
+
+# Try substitute: re.sub(regexStr, replacementStr, inStr) -> outStr
+>>> re.sub(r'[0-9]+', r'*', 'abc00123xyz456_0')
+'abc*xyz*_*'
+
+# Try substitute with count: re.subn(regexStr, replacementStr, inStr) -> (outStr, count)
+>>> re.subn(r'[0-9]+', r'*', 'abc00123xyz456_0')
+('abc*xyz*_*', 3)   # Return a tuple of output string and count
+
+________________________________________________________________________________----------------------------__________________________________-
+$ python3
+>>> re.findall(r'^(\S+)\s+(\S+)$', 'apple orange')
+[('apple', 'orange')]     # A list of tuples if the pattern has more than one back references
+# Back references are kept in \1, \2, \3, etc.
+>>> re.sub(r'^(\S+)\s+(\S+)$', r'\2 \1', 'apple orange')   # Prefix r for raw string which ignores escape
+'orange apple'
+>>> re.sub(r'^(\S+)\s+(\S+)$', '\\2 \\1', 'apple orange')  # Need to use \\ for \ for regular string
+'orange apple'
+
+____________________________________________________________________________--------------------------------__________________________________
+$ python3
+>>> import re   # Need module 're' for regular expression
+# Try find: re.findall(regexStr, inStr) -> matchedStrList
+# r'...' denotes raw strings which ignore escape code, i.e., r'\n' is '\'+'n'
+>>> re.findall(r'a', 'abcabc')
+['a', 'a']
+>>> re.findall(r'=', 'abc=abc')   # '=' is not a special regex character
+['=']
+>>> re.findall(r'\.', 'abc.com')  # '.' is a special regex character, need regex escape sequence
+['.']
+>>> re.findall('\\.', 'abc.com')  # You need to write \\ for \ in regular Python string
+['.']
+
+------------------------------------------------------------------------------------------------------------
+
+$ python3
+# Using ^ and $ in multiline mode
+>>> p1 = re.compile(r'^.+$', re.MULTILINE)  # . for any character except newline
+>>> p1.findall('testing\ntesting')
+['testing', 'testing']
+>>> p1.findall('testing\ntesting\n')
+['testing', 'testing']
+   # ^ matches start-of-input or after each line break at start-of-line
+   # $ matches end-of-input or before line break at end-of-line
+   # newlines are NOT included in the matches
+
+# Using \A and \Z in multiline mode
+>>> p2 = re.compile(r'\A.+\Z', re.MULTILINE)
+>>> p2.findall('testing\ntesting')
+[]    # This pattern does not match the internal \n
+>>> p3 = re.compile(r'\A.+\n.+\Z', re.MULTILINE)  # to match the internal \n
+>>> p3.findall('testing\ntesting')
+['testing\ntesting']
+>>> p3.findall('testing\ntesting\n')
+[]    # This pattern does not match the trailing \n
+   # \A matches start-of-input and \Z matches end-of-input
+   
+   ___________________________________________________________________________________________--
+   
